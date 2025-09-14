@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mosk:wght@300;400;500;600;700&display=swap');
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background-color: #F8F7F4;
+        color: #1a1a1a;
+        font-family: 'Pretendard', sans-serif;
+        line-height: 1.6;
+        padding: 2rem;
+        min-height: 100vh;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #c8ff8c, #a8e063);
+        padding: 3rem;
+        text-align: center;
+        position: relative;
+    }
+    
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+        background-size: 30px 30px;
+    }
+    
+    .album-title {
+        font-family: 'Mosk', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .artist-name {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: #2a2a2a;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .main-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 4rem;
+        padding: 4rem;
+    }
+    
+    .album-cover {
+        position: relative;
+    }
+    
+    .cover-image {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(45deg, #c8ff8c, #a8e063);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Mosk', sans-serif;
+        font-size: 2rem;
+        color: #1a1a1a;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        transition: transform 0.3s ease;
+    }
+    
+    .cover-image:hover {
+        transform: translateY(-5px);
+    }
+    
+    .album-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .info-item {
+        background: #F8F7F4;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #c8ff8c;
+    }
+    
+    .info-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+    
+    .tracklist-section {
+        grid-column: 1 / -1;
+        margin-top: 2rem;
+    }
+    
+    .section-title {
+        font-family: 'Mosk', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #c8ff8c;
+        display: inline-block;
+    }
+    
+    .tracklist {
+        background: #F8F7F4;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    
+    .track {
+        display: grid;
+        grid-template-columns: 60px 1fr auto;
+        gap: 1rem;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+    
+    .track:hover {
+        background: white;
+        transform: translateX(5px);
+    }
+    
+    .track:last-child {
+        border-bottom: none;
+    }
+    
+    .track-number {
+        font-family: 'Mosk', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #c8ff8c;
+        text-align: center;
+        background: #1a1a1a;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .track-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+    
+    .track-duration {
+        font-family: 'Mosk', sans-serif;
+        font-size: 1rem;
+        color: #666;
+        font-weight: 400;
+    }
+    
+    .album-description {
+        grid-column: 1 / -1;
+        margin-top: 2rem;
+    }
+    
+    .description-content {
+        background: #F8F7F4;
+        padding: 2rem;
+        border-radius: 15px;
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #333;
+        border-left: 4px solid #c8ff8c;
+    }
+    
+    .credits-section {
+        grid-column: 1 / -1;
+        margin-top: 2rem;
+    }
+    
+    .credits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .credits-category {
+        background: #F8F7F4;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #c8ff8c;
+    }
+    
+    .credits-title {
+        font-family: 'Mosk', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .credits-list p {
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+    }
+    
+    .credits-list p:last-child {
+        margin-bottom: 0;
+    }
+    
+    .special-thanks {
+        background: linear-gradient(135deg, #c8ff8c, #a8e063);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+    }
+    
+    .special-thanks .credits-title {
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+    }
+    
+    .thanks-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #1a1a1a;
+        font-weight: 400;
+    }
+    
+    @media (max-width: 768px) {
+        body {
+            padding: 1rem;
+        }
+        
+        .main-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .album-title {
+            font-size: 2rem;
+        }
+        
+        .track {
+            grid-template-columns: 50px 1fr auto;
+            padding: 1rem;
+        }
+        
+        .header {
+            padding: 2rem;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="album-title">MIDNIGHT DREAMS</h1>
+            <p class="artist-name">Luna Park</p>
+        </header>
+
+```
+    <main class="main-content">
+        <div class="album-cover">
+            <img src="./images/1.png" "mclass="cover-image">
+                ALBUM COVER
+            </div>
+        </div>
+        
+        <div class="album-info">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">유형</div>
+                    <div class="info-value">정규 1집</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">유통사</div>
+                    <div class="info-value">Dreamy Records</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">재생시간</div>
+                    <div class="info-value">42분 18초</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">트랙 수</div>
+                    <div class="info-value">12곡</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tracklist-section">
+            <h2 class="section-title">Track List</h2>
+            <div class="tracklist">
+                <div class="track">
+                    <div class="track-number">01</div>
+                    <div class="track-title">Intro: Moonlight</div>
+                    <div class="track-duration">1:23</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">02</div>
+                    <div class="track-title">Dancing in the Dark</div>
+                    <div class="track-duration">3:45</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">03</div>
+                    <div class="track-title">City Lights</div>
+                    <div class="track-duration">4:12</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">04</div>
+                    <div class="track-title">Midnight Dreams</div>
+                    <div class="track-duration">3:58</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">05</div>
+                    <div class="track-title">Neon Nights</div>
+                    <div class="track-duration">4:05</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">06</div>
+                    <div class="track-title">Stars Above</div>
+                    <div class="track-duration">3:32</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">07</div>
+                    <div class="track-title">Electric Soul</div>
+                    <div class="track-duration">4:20</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">08</div>
+                    <div class="track-title">Luna's Lullaby</div>
+                    <div class="track-duration">3:15</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">09</div>
+                    <div class="track-title">Urban Symphony</div>
+                    <div class="track-duration">4:45</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">10</div>
+                    <div class="track-title">Velvet Dreams</div>
+                    <div class="track-duration">3:28</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">11</div>
+                    <div class="track-title">Golden Hour</div>
+                    <div class="track-duration">4:33</div>
+                </div>
+                <div class="track">
+                    <div class="track-number">12</div>
+                    <div class="track-title">Outro: Dawn</div>
+                    <div class="track-duration">2:12</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="album-description">
+            <h2 class="section-title">Album Introduction</h2>
+            <div class="description-content">
+                <p>Luna Park의 첫 번째 정규 앨범 'MIDNIGHT DREAMS'는 도시의 밤을 배경으로 한 감성적인 여정을 담고 있습니다. 일렉트로닉과 팝의 절묘한 조화로 완성된 이 앨범은 현대인들의 꿈과 희망, 그리고 도시 속에서 느끼는 외로움과 설렘을 섬세하게 표현했습니다.</p>
+                
+                <p>타이틀곡 'Midnight Dreams'를 비롯해 총 12곡으로 구성된 이번 앨범은 Luna Park만의 독특한 음악적 색깔을 보여주며, 리스너들에게 밤하늘 아래에서 느끼는 특별한 감정들을 선사합니다. 각 트랙마다 다른 이야기를 담고 있어 앨범 전체를 들으면 하나의 완성된 영화를 본 듯한 느낌을 받을 수 있습니다.</p>
+            </div>
+        </div>
+
+        <div class="credits-section">
+            <h2 class="section-title">Credits</h2>
+            <div class="credits-grid">
+                <div class="credits-category">
+                    <h3 class="credits-title">Producer & Executive Producer</h3>
+                    <div class="credits-list">
+                        <p>Alex Kim</p>
+                        <p>Luna Park</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Songwriter & Composer</h3>
+                    <div class="credits-list">
+                        <p>Luna Park</p>
+                        <p>Jamie Lee</p>
+                        <p>Chris Park</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Arranger</h3>
+                    <div class="credits-list">
+                        <p>Alex Kim</p>
+                        <p>Daniel Choi</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Recording & Mixing Engineer</h3>
+                    <div class="credits-list">
+                        <p>Michael Jung @ Dream Studio</p>
+                        <p>Sarah Kim @ Echo Lab</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Mastering Engineer</h3>
+                    <div class="credits-list">
+                        <p>Tom Wilson @ Sterling Sound</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Musicians</h3>
+                    <div class="credits-list">
+                        <p>Luna Park - Vocals, Synth</p>
+                        <p>Chris Park - Guitar, Bass</p>
+                        <p>Ryan Lee - Drums</p>
+                        <p>Jessica Wong - Piano, Strings</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Art Direction & Design</h3>
+                    <div class="credits-list">
+                        <p>Studio Moonlight</p>
+                        <p>Emma Chang - Photography</p>
+                    </div>
+                </div>
+                
+                <div class="credits-category">
+                    <h3 class="credits-title">Label & Management</h3>
+                    <div class="credits-list">
+                        <p>Dreamy Records</p>
+                        <p>Luna Management Co.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="special-thanks">
+                <h3 class="credits-title">Special Thanks</h3>
+                <div class="thanks-content">
+                    <p>모든 팬들과 가족, 그리고 이 앨범 제작에 참여해주신 모든 분들께 진심으로 감사드립니다. 여러분의 사랑과 응원이 있었기에 'MIDNIGHT DREAMS'가 완성될 수 있었습니다.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+```
+
+</body>
+</html>
