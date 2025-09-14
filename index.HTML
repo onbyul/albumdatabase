@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음반 검색</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mosk:wght@300;400;500;600;700&display=swap');
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background-color: #F8F7F4;
+        color: #1a1a1a;
+        font-family: 'Pretendard', sans-serif;
+        line-height: 1.6;
+        padding: 2rem;
+        min-height: 100vh;
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .main-title {
+        font-family: 'Mosk', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #c8ff8c, #a8e063);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+        color: #666;
+        font-weight: 400;
+    }
+    
+    .search-controls {
+        background: white;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        margin-bottom: 3rem;
+    }
+    
+    .search-row {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 1rem;
+        align-items: end;
+    }
+    
+    .search-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .search-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .search-input {
+        padding: 1rem 1.5rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-family: 'Pretendard', sans-serif;
+        transition: all 0.2s ease;
+        background: #F8F7F4;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #c8ff8c;
+        background: white;
+    }
+    
+    .select-input {
+        padding: 1rem 1.5rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-family: 'Pretendard', sans-serif;
+        background: #F8F7F4;
+        cursor: pointer;
+        min-width: 150px;
+    }
+    
+    .select-input:focus {
+        outline: none;
+        border-color: #c8ff8c;
+        background: white;
+    }
+    
+    .results-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+    }
+    
+    .results-count {
+        font-size: 1.1rem;
+        color: #666;
+    }
+    
+    .results-count strong {
+        color: #1a1a1a;
+        font-weight: 600;
+    }
+    
+    .view-toggle {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .view-btn {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-family: 'Pretendard', sans-serif;
+        transition: all 0.2s ease;
+    }
+    
+    .view-btn.active {
+        border-color: #c8ff8c;
+        background: #c8ff8c;
+        color: #1a1a1a;
+    }
+    
+    .albums-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .albums-list {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+    
+    .albums-list.active {
+        display: flex;
+    }
+    
+    .albums-grid.list-view {
+        display: none;
+    }
+    
+    .album-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .album-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    
+    .album-cover-thumb {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(45deg, #c8ff8c, #a8e063);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Mosk', sans-serif;
+        font-size: 1.2rem;
+        color: #1a1a1a;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .album-cover-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .album-info-card {
+        padding: 1.5rem;
+    }
+    
+    .album-title-card {
+        font-family: 'Mosk', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+    
+    .album-artist {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+    
+    .album-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #999;
+    }
+    
+    .album-type {
+        background: #c8ff8c;
+        color: #1a1a1a;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+    
+    .album-list-item {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 80px 1fr auto auto;
+        gap: 1.5rem;
+        align-items: center;
+    }
+    
+    .album-list-item:hover {
+        background: #F8F7F4;
+        transform: translateX(5px);
+    }
+    
+    .album-cover-small {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(45deg, #c8ff8c, #a8e063);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: #1a1a1a;
+    }
+    
+    .album-cover-small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .album-main-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .album-title-list {
+        font-family: 'Mosk', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+    
+    .album-artist-list {
+        font-size: 0.95rem;
+        color: #666;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .no-results-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+    
+    .no-results-text {
+        font-size: 1.2rem;
+        color: #666;
+    }
+    
+    @media (max-width: 768px) {
+        body {
+            padding: 1rem;
+        }
+        
+        .main-title {
+            font-size: 2.5rem;
+        }
+        
+        .search-row {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .results-info {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+        
+        .albums-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .album-list-item {
+            grid-template-columns: 60px 1fr auto;
+            gap: 1rem;
+        }
+        
+        .album-cover-small {
+            width: 60px;
+            height: 60px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="main-title">MUSIC ARCHIVE</h1>
+            <p class="subtitle">음반 검색 및 탐색</p>
+        </header>
+
+```
+    <div class="search-controls">
+        <div class="search-row">
+            <div class="search-group">
+                <label class="search-label">검색</label>
+                <input type="text" class="search-input" id="searchInput" placeholder="앨범명, 아티스트명으로 검색...">
+            </div>
+            <div class="search-group">
+                <label class="search-label">음반 종류</label>
+                <select class="select-input" id="typeFilter">
+                    <option value="">전체</option>
+                    <option value="정규">정규</option>
+                    <option value="EP">EP</option>
+                    <option value="싱글">싱글</option>
+                    <option value="컴필레이션">컴필레이션</option>
+                    <option value="OST">OST</option>
+                </select>
+            </div>
+            <div class="search-group">
+                <label class="search-label">정렬</label>
+                <select class="select-input" id="sortBy">
+                    <option value="id">번호순</option>
+                    <option value="title">제목순</option>
+                    <option value="artist">아티스트순</option>
+                    <option value="year">발매년도</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="results-info">
+        <div class="results-count">
+            총 <strong id="totalCount">0</strong>개의 앨범
+        </div>
+        <div class="view-toggle">
+            <button class="view-btn active" onclick="setView('grid')">그리드</button>
+            <button class="view-btn" onclick="setView('list')">리스트</button>
+        </div>
+    </div>
+    
+    <div class="albums-grid" id="albumsGrid"></div>
+    <div class="albums-list" id="albumsList"></div>
+    
+    <div class="no-results" id="noResults" style="display: none;">
+        <div class="no-results-icon">🔍</div>
+        <div class="no-results-text">검색 결과가 없습니다.</div>
+    </div>
+</div>
+
+<script>
+    // 앨범 데이터베이스
+    const albumDatabase = [
+        {
+            id: 1,
+            title: "PM 9:17",
+            artist: "Onbyul",
+            type: "EP",
+            year: 2025,
+            cover: "./images/1.png",
+            distributor: "SeedM",
+            duration: "13:18",
+            trackCount: 5
+        },
+        {
+            id: 2,
+            title: "대중문화예술기획모임 정기 성과 발표회",
+            artist: "대중문화예술기획모임 음반",
+            type: "컴필레이션",
+            year: 2026,
+            cover: "./images/2.png",
+            distributor: "사운드리퍼블리카",
+            duration: "40:42",
+            trackCount: 8
+        },
+        {
+            id: 3,
+            title: "생활기록부",
+            artist: "Onbyul",
+            type: "정규",
+            year: 2026,
+            cover: "./images/3.png",
+            distributor: "미러볼뮤직",
+            duration: "33:42",
+            trackCount: 8
+        },
+    ];
+
+    let filteredAlbums = [...albumDatabase];
+    let currentView = 'grid';
+
+    // DOM 요소
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const sortBy = document.getElementById('sortBy');
+    const albumsGrid = document.getElementById('albumsGrid');
+    const albumsList = document.getElementById('albumsList');
+    const totalCount = document.getElementById('totalCount');
+    const noResults = document.getElementById('noResults');
+
+    // 이벤트 리스너
+    searchInput.addEventListener('input', filterAlbums);
+    typeFilter.addEventListener('change', filterAlbums);
+    sortBy.addEventListener('change', filterAlbums);
+
+    // 앨범 필터링 및 정렬
+    function filterAlbums() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedType = typeFilter.value;
+        const sortOption = sortBy.value;
+
+        // 필터링
+        filteredAlbums = albumDatabase.filter(album => {
+            const matchesSearch = album.title.toLowerCase().includes(searchTerm) || 
+                                album.artist.toLowerCase().includes(searchTerm);
+            const matchesType = !selectedType || album.type === selectedType;
+            
+            return matchesSearch && matchesType;
+        });
+
+        // 정렬
+        filteredAlbums.sort((a, b) => {
+            switch (sortOption) {
+                case 'title':
+                    return a.title.localeCompare(b.title);
+                case 'artist':
+                    return a.artist.localeCompare(b.artist);
+                case 'year':
+                    return b.year - a.year; // 최신순
+                default:
+                    return a.id - b.id; // 번호순
+            }
+        });
+
+        renderAlbums();
+    }
+
+    // 앨범 렌더링
+    function renderAlbums() {
+        totalCount.textContent = filteredAlbums.length;
+
+        if (filteredAlbums.length === 0) {
+            albumsGrid.style.display = 'none';
+            albumsList.style.display = 'none';
+            noResults.style.display = 'block';
+            return;
+        }
+
+        noResults.style.display = 'none';
+        
+        if (currentView === 'grid') {
+            albumsGrid.style.display = 'grid';
+            albumsList.style.display = 'none';
+            renderGridView();
+        } else {
+            albumsGrid.style.display = 'none';
+            albumsList.style.display = 'flex';
+            renderListView();
+        }
+    }
+
+    // 그리드 뷰 렌더링
+    function renderGridView() {
+        albumsGrid.innerHTML = filteredAlbums.map(album => `
+            <div class="album-card" onclick="goToAlbum(${album.id})">
+                <div class="album-cover-thumb">
+                    <img src="${album.cover}" alt="${album.title}" onerror="this.style.display='none'; this.parentNode.innerHTML='ALBUM ${album.id}'">
+                </div>
+                <div class="album-info-card">
+                    <div class="album-title-card">${album.title}</div>
+                    <div class="album-artist">${album.artist}</div>
+                    <div class="album-details">
+                        <span class="album-type">${album.type}</span>
+                        <span>${album.year}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 리스트 뷰 렌더링
+    function renderListView() {
+        albumsList.innerHTML = filteredAlbums.map(album => `
+            <div class="album-list-item" onclick="goToAlbum(${album.id})">
+                <div class="album-cover-small">
+                    <img src="${album.cover}" alt="${album.title}" onerror="this.style.display='none'; this.parentNode.innerHTML='${album.id}'">
+                </div>
+                <div class="album-main-info">
+                    <div class="album-title-list">${album.title}</div>
+                    <div class="album-artist-list">${album.artist}</div>
+                </div>
+                <div class="album-type">${album.type}</div>
+                <div style="color: #999; font-size: 0.9rem;">${album.year}</div>
+            </div>
+        `).join('');
+    }
+
+    // 뷰 전환
+    function setView(view) {
+        currentView = view;
+        
+        // 버튼 상태 업데이트
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        renderAlbums();
+    }
+
+    // 앨범 페이지로 이동
+    function goToAlbum(albumId) {
+        window.location.href = `album_${albumId}.html`;
+    }
+
+    // 초기 렌더링
+    filterAlbums();
+</script>
+```
+
+</body>
+</html>
